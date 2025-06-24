@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriceMyCar - Car Price Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Homepage Styles */
+        .homepage {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-section {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #b0b0b0;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        /* Feature Cards Section */
+        .features-section {
+            z-index: 10;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(78, 205, 196, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-description {
+            color: #b0b0b0;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .feature-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(78, 205, 196, 0.6);
+        }
+
+        .feature-button.secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .feature-button.secondary:hover {
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .feature-button.tertiary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .feature-button.tertiary:hover {
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Main CTA Button */
+        .main-cta {
+            z-index: 10;
+            position: relative;
+        }
+
+        .cta-button {
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: white;
+            border: none;
+            border-radius: 50px;
+            color: black;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.6);
+            background: #f0f0f0;
+        }
+
+        /* Animated Cars Background */
+        .car-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .car {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: driveCar 15s linear infinite;
+        }
+
+        .car:nth-child(1) { top: 20%; animation-delay: 0s; }
+        .car:nth-child(2) { top: 40%; animation-delay: 5s; }
+        .car:nth-child(3) { top: 60%; animation-delay: 10s; }
+        .car:nth-child(4) { top: 80%; animation-delay: 3s; }
+.error-message {
+    color: #ff6b6b;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1s; }
+
+        /* Form Page Styles */
+        .form-page {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 0.3rem;
+            font-style: italic;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        /* Enhanced validation styles */
+        .form-input:valid {
+            border-color: #4ecdc4;
+        }
+
+        .form-input:invalid:not(:placeholder-shown) {
+            border-color: #ff4757;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: #888;
+        }
+
+        /* Validation message styles */
+        .validation-message {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .validation-message.error {
+            color: #ff4757;
+            opacity: 1;
+        }
+
+        .validation-message.success {
+            color: #4ecdc4;
+            opacity: 1;
+        }
+
+        .predict-button {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+        }
+
+        .predict-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(78, 205, 196, 0.6);
+        }
+
+        .predict-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .prediction-result {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .prediction-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .prediction-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Comparison Page Styles */
+        .comparison-page {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .comparison-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .car-comparison-form {
+            margin-bottom: 2rem;
+        }
+
+        .car-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .car-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .remove-car-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 107, 107, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-car-btn:hover {
+            background: rgba(255, 107, 107, 0.4);
+        }
+
+        .add-car-btn {
+            display: block;
+            margin: 0 auto 2rem;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-car-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .comparison-results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .car-result {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .car-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .car-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stats-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .recommendation {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 15px;
+            border-left: 5px solid #4ecdc4;
+        }
+
+        /* Market Analysis Page Styles */
+        .market-page {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .market-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .market-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .market-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .market-position {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .position-above {
+            background: rgba(255, 107, 107, 0.2);
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .position-below {
+            background: rgba(78, 205, 196, 0.2);
+            border-left: 5px solid #4ecdc4;
+        }
+
+        .position-normal {
+            background: rgba(102, 126, 234, 0.2);
+            border-left: 5px solid #667eea;
+        }
+
+        .variation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .variation-info {
+            flex: 1;
+        }
+
+        .variation-price {
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+
+        .variation-diff {
+            font-weight: bold;
+        }
+
+        .diff-positive {
+            color: #ff6b6b;
+        }
+
+        .diff-negative {
+            color: #4ecdc4;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #4ecdc4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes driveCar {
+            0% { transform: translateX(-100px) rotate(0deg); }
+            100% { transform: translateX(calc(100vw + 100px)) rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .car-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Homepage -->
+    <div class="homepage" id="homepage">
+        <div class="car-animation">
+            <div class="car">🚗</div>
+            <div class="car">🚙</div>
+            <div class="car">🚕</div>
+            <div class="car">🏎️</div>
+        </div>
+        
+        <div class="floating-elements">
+            <div class="floating-icon">⚙️</div>
+            <div class="floating-icon">🔧</div>
+            <div class="floating-icon">💎</div>
+            <div class="floating-icon">⭐</div>
+        </div>
+        
+        <div class="hero-section">
+            <h1 class="hero-title">PriceMyCar AI</h1>
+            <p class="hero-subtitle">Predict Your Car's True Value with Machine Learning Precision</p>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🔍</span>
+                    <h3 class="feature-title">Single Car Prediction</h3>
+                    <p class="feature-description">Get instant AI-powered price predictions for your car using advanced machine learning algorithms trained on thousands of data points.</p>
+                    <button class="feature-button" onclick="showFormPage()">Predict My Car Price</button>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚖️</span>
+                    <h3 class="feature-title">Compare Multiple Cars</h3>
+                    <p class="feature-description">Compare up to 5 cars side-by-side with detailed analytics, price differences, and smart recommendations to find the best deal.</p>
+                    <button class="feature-button secondary" onclick="showComparisonPage()">Compare Cars</button>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Market Analysis</h3>
+                    <p class="feature-description">Understand your car's market position with intelligent analysis comparing similar vehicles and market trends.</p>
+                    <button class="feature-button tertiary" onclick="showMarketPage()">Market Position</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main CTA -->
+        <div class="main-cta">
+            <button class="cta-button" onclick="showFormPage()">Get Started Now</button>
+        </div>
+    </div>
+
+    <!-- Single Prediction Form Page -->
+    <div class="form-page" id="formPage">
+        <button class="back-button" onclick="showHomePage()">← Back to Home</button>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h2 class="form-title">Car Price Prediction</h2>
+                <p>Enter your car details to get an AI-powered price prediction</p>
+            </div>
+            
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Car Name</label>
+                        <div class="input-hint">Enter your car's full model name</div>
+                        <input type="text" class="form-input" name="name" placeholder="e.g., Maruti Swift Dzire VDI" required>
+                        <div class="validation-message" id="name-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <select class="form-select" name="location" required>
+                            <option value="">Select Location</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Coimbatore">Coimbatore</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Kochi">Kochi</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Year</label>
+                        <div class="input-hint">Manufacturing year (1990-2025)</div>
+                        <input type="number" class="form-input" name="year" placeholder="e.g., 2018" min="1990" max="2025" required>
+                        <div class="validation-message" id="year-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Kilometers Driven</label>
+                        <div class="input-hint">Total distance covered (0-500,000 km)</div>
+                        <input type="number" class="form-input" name="kilometersdriven" placeholder="e.g., 45000" min="0" max="500000" required>
+                        <div class="validation-message" id="km-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fuel Type</label>
+                        <select class="form-select" name="fueltype" required>
+                            <option value="">Select Fuel Type</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Petrol">Petrol</option>
+                            <option value="CNG">CNG</option>
+                            <option value="LPG">LPG</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Transmission</label>
+                        <select class="form-select" name="transmission" required>
+                            <option value="">Select Transmission</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Owner Type</label>
+                        <select class="form-select" name="ownertype" required>
+                            <option value="">Select Owner Type</option>
+                            <option value="First">First</option>
+                            <option value="Second">Second</option>
+                            <option value="Third">Third</option>
+                            <option value="Fourth & Above">Fourth & Above</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Mileage</label>
+                        <div class="input-hint">Fuel efficiency (8-35 kmpl)</div>
+                        <input type="number" class="form-input" name="mileage" placeholder="e.g., 23.4" min="8" max="35" step="0.1">
+                        <div class="validation-message" id="mileage-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Engine</label>
+                        <div class="input-hint">Engine capacity (800-5000 CC)</div>
+                        <input type="number" class="form-input" name="engine" placeholder="e.g., 1248" min="800" max="5000">
+                        <div class="validation-message" id="engine-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Power</label>
+                        <div class="input-hint">Engine power (40-500 bhp)</div>
+                        <input type="number" class="form-input" name="power" placeholder="e.g., 88.5" min="40" max="500" step="0.1">
+                        <div class="validation-message" id="power-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Seats</label>
+                        <select class="form-select" name="seats">
+                            <option value="">Select Seats</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="predict-button" id="submitBtn">Predict Car Price</button>
+            </form>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your car details...</p>
+            </div>
+            
+            <div class="prediction-result" id="predictionResult">
+                <div class="prediction-value" id="predictionValue">₹0</div>
+                <div class="prediction-label">Predicted Car Price</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Page -->
+    <div class="comparison-page" id="comparisonPage">
+        <button class="back-button" onclick="showHomePage()">← Back to Home</button>
+        
+        <div class="comparison-container">
+            <div class="comparison-header">
+                <h2 class="comparison-title">Compare Cars</h2>
+                <p>Add 2-5 cars to compare their predicted prices and features</p>
+            </div>
+            
+            <form id="comparisonForm" class="car-comparison-form">
+                <div id="carFormsContainer" class="car-selection">
+                    <!-- Car forms will be added here dynamically -->
+                </div>
+                
+                <button type="button" class="add-car-btn" id="addCarBtn" onclick="addCarForm()">
+                    + Add Another Car
+                </button>
+                
+                <button type="submit" class="predict-button" id="compareBtn">Compare Cars</button>
+            </form>
+            
+            <div class="loading" id="comparisonLoading">
+                <div class="spinner"></div>
+                <p>Comparing cars...</p>
+            </div>
+            
+            <div class="comparison-results" id="comparisonResults">
+                <div id="resultsGrid" class="results-grid">
+                    <!-- Comparison results will be added here dynamically -->
+                </div>
+                
+                <div class="stats-container">
+                    <h3 class="stats-title">Comparison Statistics</h3>
+                    <div id="statsGrid" class="stats-grid">
+                        <!-- Stats will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div id="recommendation" class="recommendation">
+                    <!-- Recommendation will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Analysis Page -->
+    <div class="market-page" id="marketPage">
+        <button class="back-button" onclick="showHomePage()">← Back to Home</button>
+        
+        <div class="market-container">
+            <div class="market-header">
+                <h2 class="market-title">Market Position Analysis</h2>
+                <p>See how your car compares to similar vehicles in the market</p>
+            </div>
+            
+            <form id="marketForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Car Name</label>
+                        <input type="text" class="form-input" name="name" placeholder="e.g., Maruti Swift Dzire VDI" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <select class="form-select" name="location" required>
+                            <option value="">Select Location</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Coimbatore">Coimbatore</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Kochi">Kochi</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Year</label>
+                        <input type="number" class="form-input" name="year" placeholder="e.g., 2018" min="1990" max="2025" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Kilometers Driven</label>
+                        <input type="number" class="form-input" name="kilometersdriven" placeholder="e.g., 45000" min="0" max="500000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fuel Type</label>
+                        <select class="form-select" name="fueltype" required>
+                            <option value="">Select Fuel Type</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Petrol">Petrol</option>
+                            <option value="CNG">CNG</option>
+                            <option value="LPG">LPG</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Transmission</label>
+                        <select class="form-select" name="transmission" required>
+                            <option value="">Select Transmission</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Owner Type</label>
+                        <select class="form-select" name="ownertype" required>
+                            <option value="">Select Owner Type</option>
+                            <option value="First">First</option>
+                            <option value="Second">Second</option>
+                            <option value="Third">Third</option>
+                            <option value="Fourth & Above">Fourth & Above</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Mileage</label>
+                        <input type="number" class="form-input" name="mileage" placeholder="e.g., 23.4" min="8" max="35" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Engine</label>
+                        <input type="number" class="form-input" name="engine" placeholder="e.g., 1248" min="800" max="5000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Power</label>
+                        <input type="number" class="form-input" name="power" placeholder="e.g., 88.5" min="40" max="500" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Seats</label>
+                        <select class="form-select" name="seats">
+                            <option value="">Select Seats</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="predict-button" id="analyzeBtn">Analyze Market Position</button>
+            </form>
+            
+            <div class="loading" id="marketLoading">
+                <div class="spinner"></div>
+                <p>Analyzing market position...</p>
+            </div>
+            
+            <div id="marketResults" style="display: none;">
+                <div class="prediction-result">
+                    <div class="prediction-value" id="marketPriceValue">₹0</div>
+                    <div class="prediction-label">Your Car's Predicted Price</div>
+                </div>
+                
+                <div id="marketPosition" class="market-position">
+                    <!-- Market position will be added here dynamically -->
+                </div>
+                
+                <h3 style="margin: 2rem 0 1rem; text-align: center;">Price Variations</h3>
+                <div id="variationsList">
+                    <!-- Variations will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <script>
+    // Configuration
+    const API_BASE_URL = 'http://127.0.0.1:8001'; // Ensure this is correct
+
+    // Navigation functions
+    function showHomePage() {
+        document.getElementById('homepage').style.display = 'flex';
+        document.getElementById('formPage').style.display = 'none';
+        document.getElementById('comparisonPage').style.display = 'none';
+        document.getElementById('marketPage').style.display = 'none';
+        hideAllResults();
+    }
+
+    function hideAllResults() {
+        document.getElementById('predictionResult').style.display = 'none';
+        document.getElementById('comparisonResults').style.display = 'none';
+        document.getElementById('marketResults').style.display = 'none';
+    }
+
+    function showFormPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('formPage').style.display = 'block';
+        document.getElementById('comparisonPage').style.display = 'none';
+        document.getElementById('marketPage').style.display = 'none';
+        hideAllResults();
+    }
+
+    function showComparisonPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('formPage').style.display = 'none';
+        document.getElementById('comparisonPage').style.display = 'block';
+        document.getElementById('marketPage').style.display = 'none';
+        hideAllResults();
+        
+        // Initialize with 2 car forms
+        const container = document.getElementById('carFormsContainer');
+        container.innerHTML = ''; // Clear existing forms
+        carCount = 0; // Reset car count
+        addCarForm();
+        addCarForm();
+    }
+
+    function showMarketPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('formPage').style.display = 'none';
+        document.getElementById('comparisonPage').style.display = 'none';
+        document.getElementById('marketPage').style.display = 'block';
+        hideAllResults();
+    }
+
+    // Car comparison functionality
+    let carCount = 0; // This variable needs to be accessible globally or in this scope
+    
+    function addCarForm() {
+        if (carCount >= 5) {
+            alert('Maximum 5 cars allowed for comparison');
+            return;
+        }
+        
+        carCount++;
+        const container = document.getElementById('carFormsContainer');
+        
+        const carForm = document.createElement('div');
+        carForm.className = 'car-form';
+        carForm.innerHTML = `
+            <h3>Car ${carCount}</h3>
+            <button class="remove-car-btn" onclick="removeCarForm(this)">× Remove</button>
+            <div class="form-group">
+                <label class="form-label">Car Name</label>
+                <input type="text" class="form-input" name="name_${carCount}" placeholder="e.g., Maruti Swift Dzire VDI" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <select class="form-select" name="location_${carCount}" required>
+                    <option value="">Select Location</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Coimbatore">Coimbatore</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Jaipur">Jaipur</option>
+                    <option value="Kochi">Kochi</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Year</label>
+                <input type="number" class="form-input" name="year_${carCount}" placeholder="e.g., 2018" min="1990" max="2025" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Kilometers Driven</label>
+                <input type="number" class="form-input" name="kilometersdriven_${carCount}" placeholder="e.g., 45000" min="0" max="500000" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Fuel Type</label>
+                <select class="form-select" name="fueltype_${carCount}" required>
+                    <option value="">Select Fuel Type</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="CNG">CNG</option>
+                    <option value="LPG">LPG</option>
+                    <option value="Electric">Electric</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Transmission</label>
+                <select class="form-select" name="transmission_${carCount}" required>
+                    <option value="">Select Transmission</option>
+                    <option value="Manual">Manual</option>
+                    <option value="Automatic">Automatic</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Owner Type</label>
+                <select class="form-select" name="ownertype_${carCount}" required>
+                    <option value="">Select Owner Type</option>
+                    <option value="First">First</option>
+                    <option value="Second">Second</option>
+                    <option value="Third">Third</option>
+                    <option value="Fourth & Above">Fourth & Above</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mileage</label>
+                <input type="number" class="form-input" name="mileage_${carCount}" placeholder="e.g., 23.4" min="8" max="35" step="0.1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Engine</label>
+                <input type="number" class="form-input" name="engine_${carCount}" placeholder="e.g., 1248" min="800" max="5000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Power</label>
+                <input type="number" class="form-input" name="power_${carCount}" placeholder="e.g., 88.5" min="40" max="500" step="0.1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Seats</label>
+                <select class="form-select" name="seats_${carCount}">
+                    <option value="">Select Seats</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+        `;
+        
+        container.appendChild(carForm);
+    }
+
+    function removeCarForm(button) {
+        if (carCount <= 2) {
+            alert('You need at least 2 cars for comparison');
+            return;
+        }
+        button.parentElement.remove();
+        carCount--;
+        // Renumber remaining cars
+        const carForms = document.querySelectorAll('.car-form');
+        carForms.forEach((form, idx) => {
+            form.querySelector('h3').textContent = `Car ${idx + 1}`;
+        });
+    }
+
+    // Enhanced API call function
+    async function callAPI(endpoint, data) {
+        try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                // Improved error message for better debugging
+                throw new Error(errorData.detail || `API request failed with status ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error(`API Error (${endpoint}):`, error);
+            throw error;
+        }
+    }
+
+    // Single prediction form submission
+    document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingDiv = document.getElementById('loading');
+        const resultDiv = document.getElementById('predictionResult');
+        
+        // Clear previous errors
+        loadingDiv.querySelector('.error-message')?.remove();
+        
+        // UI state
+        submitBtn.disabled = true;
+        loadingDiv.style.display = 'block';
+        resultDiv.style.display = 'none';
+        
+        try {
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name'),
+                location: formData.get('location'),
+                year: parseInt(formData.get('year')),
+                kilometersdriven: parseInt(formData.get('kilometersdriven')),
+                fueltype: formData.get('fueltype'),
+                transmission: formData.get('transmission'),
+                ownertype: formData.get('ownertype'),
+                mileage: formData.get('mileage') ? parseFloat(formData.get('mileage')) : null,
+                engine: formData.get('engine') ? parseFloat(formData.get('engine')) : null,
+                power: formData.get('power') ? parseFloat(formData.get('power')) : null,
+                seats: formData.get('seats') ? parseInt(formData.get('seats')) : null
+            };
+            
+            // Make the API call using your existing callAPI function
+            const result = await callAPI('/predict_single', data);
+            
+            // Display result
+            document.getElementById('predictionValue').textContent = 
+                `₹${result.prediction.toLocaleString('en-IN')} Lakhs`;
+            resultDiv.style.display = 'block';
+            
+        } catch (error) {
+            console.error('Prediction error:', error);
+            
+            // Show error message in the loading div
+            const errorElement = document.createElement('div');
+            errorElement.className = 'error-message';
+            errorElement.textContent = error.message;
+            loadingDiv.appendChild(errorElement);
+            
+            // Keep loading visible to show the error
+        } finally {
+            submitBtn.disabled = false;
+            // Don't hide loading if there's an error (it contains the error message)
+            if (!loadingDiv.querySelector('.error-message')) {
+                loadingDiv.style.display = 'none';
+            }
+        }
+    });
+
+    // Comparison form submission - THIS IS THE KEY UPDATED SECTION
+    document.getElementById('comparisonForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (carCount < 2) {
+            alert('Please add at least 2 cars to compare');
+            return;
+        }
+        
+        const cars = [];
+        // Loop through the dynamically created car forms
+        const carFormElements = document.querySelectorAll('#carFormsContainer .car-form');
+
+        carFormElements.forEach((carFormElement, index) => {
+            // Use 'index + 1' to match the naming convention (e.g., name_1, name_2)
+            const carIndex = index + 1; 
+
+            cars.push({
+                name: carFormElement.querySelector(`[name="name_${carIndex}"]`).value,
+                location: carFormElement.querySelector(`[name="location_${carIndex}"]`).value,
+                year: parseInt(carFormElement.querySelector(`[name="year_${carIndex}"]`).value),
+                kilometersdriven: parseInt(carFormElement.querySelector(`[name="kilometersdriven_${carIndex}"]`).value),
+                fueltype: carFormElement.querySelector(`[name="fueltype_${carIndex}"]`).value,
+                transmission: carFormElement.querySelector(`[name="transmission_${carIndex}"]`).value,
+                ownertype: carFormElement.querySelector(`[name="ownertype_${carIndex}"]`).value,
+                // Handle optional fields: if input value is empty string, send null
+                mileage: carFormElement.querySelector(`[name="mileage_${carIndex}"]`).value ? parseFloat(carFormElement.querySelector(`[name="mileage_${carIndex}"]`).value) : null,
+                engine: carFormElement.querySelector(`[name="engine_${carIndex}"]`).value ? parseFloat(carFormElement.querySelector(`[name="engine_${carIndex}"]`).value) : null,
+                power: carFormElement.querySelector(`[name="power_${carIndex}"]`).value ? parseFloat(carFormElement.querySelector(`[name="power_${carIndex}"]`).value) : null,
+                // Seats is optional float on backend
+                seats: carFormElement.querySelector(`[name="seats_${carIndex}"]`).value ? parseFloat(carFormElement.querySelector(`[name="seats_${carIndex}"]`).value) : null 
+            });
+        });
+        
+        // Show loading
+        document.getElementById('comparisonLoading').style.display = 'block';
+        document.getElementById('comparisonResults').style.display = 'none';
+        document.getElementById('compareBtn').disabled = true; 
+        
+        try {
+            // *** CRUCIAL FIX: Sending the 'cars' array directly, not wrapped in an object ***
+            const result = await callAPI('/compare_cars', cars); 
+            displayComparisonResults(result);
+            
+        } catch (error) {
+            console.error('Comparison error:', error);
+            // Show a more informative error message
+            alert('Error comparing cars: ' + (error.message || 'An unknown error occurred. Please check the browser console (F12) for details.'));
+        } finally {
+            document.getElementById('comparisonLoading').style.display = 'none';
+            document.getElementById('compareBtn').disabled = false;
+        }
+    });
+
+    function displayComparisonResults(result) {
+        const resultsGrid = document.getElementById('resultsGrid');
+        const statsGrid = document.getElementById('statsGrid');
+        const recommendation = document.getElementById('recommendation');
+        
+        // Clear previous results
+        resultsGrid.innerHTML = '';
+        statsGrid.innerHTML = '';
+        
+        // Display each car's result
+        result.cars.forEach((car, index) => {
+            const carResult = document.createElement('div');
+            carResult.className = 'car-result';
+            carResult.innerHTML = `
+                <div class="car-name">${car.name || `Car ${index + 1}`}</div>
+                <div class="car-price">₹${car.prediction.toLocaleString('en-IN')} Lakhs</div>
+                <div style="text-align: left; margin-top: 1rem;">
+                    <div><strong>Location:</strong> ${car.location}</div>
+                    <div><strong>Year:</strong> ${car.year}</div>
+                    <div><strong>KM Driven:</strong> ${car.kilometersdriven.toLocaleString('en-IN')}</div>
+                    <div><strong>Fuel:</strong> ${car.fueltype}</div>
+                    <div><strong>Transmission:</strong> ${car.transmission}</div>
+                </div>
+            `;
+            resultsGrid.appendChild(carResult);
+        });
+        
+        // Display statistics
+        const stats = [
+            { label: 'Average Price', value: `₹${result.stats.average.toLocaleString('en-IN')} Lakhs` },
+            { label: 'Highest Price', value: `₹${result.stats.max.toLocaleString('en-IN')} Lakhs` },
+            { label: 'Lowest Price', value: `₹${result.stats.min.toLocaleString('en-IN')} Lakhs` },
+            { label: 'Price Range', value: `₹${result.stats.range.toLocaleString('en-IN')} Lakhs` }
+        ];
+        
+        stats.forEach(stat => {
+            const statItem = document.createElement('div');
+            statItem.className = 'stat-item';
+            statItem.innerHTML = `
+                <div class="stat-value">${stat.value}</div>
+                <div class="stat-label">${stat.label}</div>
+            `;
+            statsGrid.appendChild(statItem);
+        });
+        
+        // Generate recommendation
+        const bestValueCar = result.cars.reduce((best, current) => 
+            (current.prediction / current.kilometersdriven) < (best.prediction / best.kilometersdriven) ? current : best
+        );
+        
+        recommendation.innerHTML = `
+            <p>Based on price per kilometer, <strong>${bestValueCar.name || 'the car'}</strong> offers the best value at 
+            ₹${bestValueCar.prediction.toLocaleString('en-IN')} Lakhs with ${bestValueCar.kilometersdriven.toLocaleString('en-IN')} km.</p>
+        `;
+        
+        // Show results section
+        document.getElementById('comparisonResults').style.display = 'block';
+    }
+
+    // Market analysis form submission
+    document.getElementById('marketForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = {
+            name: formData.get('name'),
+            location: formData.get('location'),
+            year: parseInt(formData.get('year')),
+            kilometersdriven: parseInt(formData.get('kilometersdriven')),
+            fueltype: formData.get('fueltype'),
+            transmission: formData.get('transmission'),
+            ownertype: formData.get('ownertype'),
+            mileage: formData.get('mileage') ? parseFloat(formData.get('mileage')) : null,
+            engine: formData.get('engine') ? parseFloat(formData.get('engine')) : null,
+            power: formData.get('power') ? parseFloat(formData.get('power')) : null,
+            seats: formData.get('seats') ? parseFloat(formData.get('seats')) : null
+        };
+        
+        // Show loading
+        document.getElementById('marketLoading').style.display = 'block';
+        document.getElementById('marketResults').style.display = 'none';
+        document.getElementById('analyzeBtn').disabled = true;
+        
+        try {
+            const result = await callAPI('/market_analysis', data);
+            displayMarketAnalysis(result);
+            
+        } catch (error) {
+            console.error('Market analysis error:', error);
+            alert('Error analyzing market position: ' + (error.message || 'An unknown error occurred. Check console for details.'));
+        } finally {
+            document.getElementById('marketLoading').style.display = 'none';
+            document.getElementById('analyzeBtn').disabled = false;
+        }
+    });
+
+    function displayMarketAnalysis(result) {
+        // Display base price
+        document.getElementById('marketPriceValue').textContent = 
+            `₹${result.base_price.toLocaleString('en-IN')} Lakhs`;
+        
+        // Display market position
+        const marketPosition = document.getElementById('marketPosition');
+        marketPosition.textContent = `Your car is priced ${result.market_position} market average`;
+        marketPosition.className = 'market-position ';
+        
+        if (result.market_position.includes("above")) {
+            marketPosition.className += 'position-above';
+        } else if (result.market_position.includes("below")) {
+            marketPosition.className += 'position-below';
+        } else {
+            marketPosition.className += 'position-normal';
+        }
+        
+        // Display variations
+        const variationsList = document.getElementById('variationsList');
+        variationsList.innerHTML = '';
+        
+        result.scenarios.forEach(scenario => {
+            const variationItem = document.createElement('div');
+            variationItem.className = 'variation-item';
+            
+            const diffClass = scenario.difference >= 0 ? 'diff-positive' : 'diff-negative';
+            const diffSymbol = scenario.difference >= 0 ? '+' : '';
+            
+            variationItem.innerHTML = `
+                <div class="variation-info">
+                    <div><strong>${scenario.variation}</strong></div>
+                    <div>${scenario.percent_diff}% difference</div>
+                </div>
+                <div class="variation-price">₹${scenario.price.toLocaleString('en-IN')} Lakhs</div>
+                <div class="variation-diff ${diffClass}">
+                    ${diffSymbol}₹${Math.abs(scenario.difference).toLocaleString('en-IN')} Lakhs
+                </div>
+            `;
+            
+            variationsList.appendChild(variationItem);
+        });
+        
+        // Show results section
+        document.getElementById('marketResults').style.display = 'block';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up form validation
+        const validateInput = (input, min, max, fieldName) => {
+            const value = parseFloat(input.value);
+            const messageEl = document.getElementById(`${input.name}-message`);
+            
+            if (!input.value) { // If field is empty
+                if (messageEl) {
+                    messageEl.textContent = '';
+                    messageEl.className = 'validation-message';
+                }
+                return false; // Or return true if empty is allowed (for optional fields)
+            }
+            
+            if (isNaN(value) || value < min || value > max) {
+                if (messageEl) {
+                    messageEl.textContent = `${fieldName} should be between ${min} and ${max}`;
+                    messageEl.className = 'validation-message error';
+                }
+                return false;
+            } else {
+                if (messageEl) {
+                    messageEl.textContent = `✓ Valid`;
+                    messageEl.className = 'validation-message success';
+                }
+                return true;
+            }
+        };
+
+        // Set up validation for single prediction form (using querySelector to find inputs)
+        document.querySelector('input[name="year"]')?.addEventListener('input', (e) => 
+            validateInput(e.target, 1990, new Date().getFullYear(), 'Year'));
+        
+        document.querySelector('input[name="kilometersdriven"]')?.addEventListener('input', (e) => 
+            validateInput(e.target, 0, 500000, 'Kilometers Driven'));
+            
+        document.querySelector('input[name="mileage"]')?.addEventListener('input', (e) => 
+            validateInput(e.target, 8, 35, 'Mileage'));
+            
+        document.querySelector('input[name="engine"]')?.addEventListener('input', (e) => 
+            validateInput(e.target, 800, 5000, 'Engine'));
+            
+        document.querySelector('input[name="power"]')?.addEventListener('input', (e) => 
+            validateInput(e.target, 40, 500, 'Power'));
+
+        // Initialize comparison page with 2 cars by default when it loads
+        // This ensures addCarForm is called and carCount is properly set.
+        if (document.getElementById('comparisonPage') && document.getElementById('comparisonPage').style.display !== 'none') {
+            showComparisonPage(); // Only call if comparisonPage is the initial active page
+        } else {
+            // Default to showing homepage if comparisonPage is not the initial view
+            showHomePage(); 
+        }
+
+        // Add event listeners for navigation buttons if they exist
+        document.getElementById('predictNav')?.addEventListener('click', showFormPage);
+        document.getElementById('compareNav')?.addEventListener('click', showComparisonPage);
+        document.getElementById('marketNav')?.addEventListener('click', showMarketPage);
+        document.getElementById('homeNav')?.addEventListener('click', showHomePage);
+    });
+</script>
+</body>
+</html>
